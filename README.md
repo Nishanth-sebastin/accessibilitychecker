@@ -54,3 +54,4 @@ The automated scan checks for violations that map to **Section 508** standards i
 
 *Note: Automated testing covers ~60-80% of compliance issues. Manual testing is recommended for full verification (e.g., screen reader usability).*
 # accessibilitychecker
+# accessibilitychecker
