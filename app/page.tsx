@@ -30,6 +30,19 @@ export default function Home() {
     finally { setLoading(false); }
   };
 
+  const handleExport = () => {
+    if (!result) return;
+    const dataStr = JSON.stringify(result, null, 2);
+    const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+    
+    const exportFileDefaultName = `accessibility-audit-${new Date().toISOString().split('T')[0]}.json`;
+    
+    const linkElement = document.createElement('a');
+    linkElement.setAttribute('href', dataUri);
+    linkElement.setAttribute('download', exportFileDefaultName);
+    linkElement.click();
+  };
+
   if (loading) return (
     <div className="min-h-screen flex flex-col items-center justify-center p-8 bg-white">
        <div className="w-8 h-8 border-2 border-gray-100 border-t-blue-600 rounded-full animate-spin"></div>
@@ -75,7 +88,10 @@ export default function Home() {
                  <h1 className="text-2xl font-semibold tracking-tight">Audit Report</h1>
                  <p className="text-gray-500 text-sm mt-1">{new Date(result.timestamp).toLocaleDateString(undefined, { dateStyle: 'long' })}</p>
               </div>
-              <button className="bg-gray-900 text-white px-4 py-2 rounded-md text-xs font-medium hover:bg-black transition-colors shadow-sm active:scale-95">
+              <button 
+                onClick={handleExport}
+                className="bg-gray-900 text-white px-4 py-2 rounded-md text-xs font-medium hover:bg-black transition-colors shadow-sm active:scale-95"
+              >
                 Export Analysis
               </button>
            </header>
