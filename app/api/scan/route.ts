@@ -181,7 +181,7 @@ export async function POST(req: Request) {
             browser = await chromium.launch({
                 args: chromiumMin.args,
                 executablePath: await chromiumMin.executablePath('https://github.com/sparticuz/chromium/releases/download/v131.0.1/chromium-v131.0.1-pack.tar'),
-                headless: chromiumMin.headless,
+                headless: chromiumMin.headless as boolean,
             });
         } else {
             // Local fallback
