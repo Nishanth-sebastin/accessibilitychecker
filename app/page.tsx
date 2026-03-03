@@ -278,36 +278,93 @@ export default function Home() {
                     <div className="max-w-2xl text-center mb-10">
                        <h2 className="text-lg font-semibold mb-2 tracking-tight">Expert Audit Required</h2>
                        <p className="text-gray-500 text-sm leading-relaxed">
-                          The following accessibility areas require human verification to ensure full legal compliance and optimal user experience.
+                          The following accessibility areas require human verification or automated procedural checks to ensure full legal compliance.
                        </p>
                     </div>
-                    <div className="w-full max-w-4xl flex flex-col gap-6">
-                       {result.categories.manual.verificationRequired?.map((v: any, i: number) => (
-                          <div key={v.id} className="border border-gray-200 rounded-xl p-6 shadow-sm">
-                             <div className="flex justify-between items-start mb-4">
-                                <div className="flex flex-col gap-2">
-                                   <h3 className="font-semibold text-sm">{v.help}</h3>
-                                   <div className="flex flex-wrap gap-1">
-                                      {v.disabilities?.map((d: string) => (
-                                         <span key={d} className="px-1.5 py-0.5 rounded-md bg-gray-100 text-gray-600 border border-gray-200 text-[9px] font-semibold uppercase tracking-wider">
-                                            {d}
-                                         </span>
+                    <div className="w-full max-w-4xl flex flex-col gap-10">
+                       {/* Automated Procedures Section */}
+                       {result.categories.manual.procedures && result.categories.manual.procedures.length > 0 && (
+                          <div className="flex flex-col gap-6">
+                             <h3 className="text-[11px] font-bold uppercase tracking-[0.2em] text-gray-400 border-b border-gray-100 pb-4">Automated Procedures</h3>
+                             {result.categories.manual.procedures.map((proc: any) => (
+                                <div key={proc.id} className={`border rounded-xl p-6 shadow-sm transition-all ${proc.passed ? 'bg-emerald-50/20 border-emerald-100' : 'bg-amber-50/20 border-amber-100'}`}>
+                                   <div className="flex justify-between items-start mb-4">
+                                      <div className="flex flex-col gap-1">
+                                         <h4 className="font-semibold text-sm flex items-center gap-2">
+                                            {proc.title}
+                                            {proc.passed ? 
+                                               <span className="text-[9px] bg-emerald-100 text-emerald-700 px-1.5 py-0.5 rounded uppercase tracking-wider font-bold">Pass</span> : 
+                                               <span className="text-[9px] bg-amber-100 text-amber-700 px-1.5 py-0.5 rounded uppercase tracking-wider font-bold">Issue</span>
+                                            }
+                                         </h4>
+                                         <p className="text-gray-500 text-xs">{proc.purpose}</p>
+                                      </div>
+                                      <div className="flex gap-2">
+                                         {proc.levels.map((l: string) => (
+                                            <span key={l} className="text-[9px] font-bold text-gray-400 border border-gray-200 px-1.5 py-0.5 rounded uppercase">{l}</span>
+                                         ))}
+                                      </div>
+                                   </div>
+
+                                   {proc.issues && proc.issues.length > 0 && (
+                                      <div className="mt-4 bg-white/50 border border-amber-100 rounded-lg p-4">
+                                         <h5 className="text-[10px] font-bold uppercase tracking-wider text-amber-800 mb-2">Detected Issues:</h5>
+                                         <ul className="list-disc list-inside text-xs text-amber-900 flex flex-col gap-1">
+                                            {proc.issues.map((issue: string, idx: number) => (
+                                               <li key={idx}>{issue}</li>
+                                            ))}
+                                         </ul>
+                                      </div>
+                                   )}
+
+                                   <div className="mt-6 pt-4 border-t border-gray-100/50 flex flex-col gap-3">
+                                      {proc.criteria.map((c: any, idx: number) => (
+                                         <div key={idx} className="flex flex-col gap-1">
+                                            <div className="flex justify-between items-center">
+                                               <span className="text-[10px] font-mono font-bold text-gray-400">{c.code} {c.name}</span>
+                                               <span className="text-[9px] font-medium text-gray-400 italic">Target: {c.testing}</span>
+                                            </div>
+                                            <p className="text-[11px] text-gray-500 leading-relaxed italic">"{c.description}"</p>
+                                         </div>
                                       ))}
                                    </div>
                                 </div>
-                                <span className="text-[10px] font-mono font-medium text-gray-400 uppercase tracking-tight">{v.wcagCriteria}</span>
-                             </div>
-                             <p className="text-gray-500 text-sm mb-6 leading-relaxed">{v.description}</p>
-                             <div className="bg-gray-50 p-4 rounded-lg border border-gray-100">
-                                <h4 className="text-[10px] font-semibold uppercase tracking-widest text-gray-400 mb-3">Verification Target</h4>
-                                {v.nodes.map((node: any, idx: number) => (
-                                   <div key={idx} className="mb-2 last:mb-0">
-                                      <code className="text-[11px] text-gray-600">{node.html}</code>
-                                   </div>
-                                ))}
-                             </div>
+                             ))}
                           </div>
-                       ))}
+                       )}
+
+                       {/* Manual Verification Section */}
+                       {result.categories.manual.verificationRequired && result.categories.manual.verificationRequired.length > 0 && (
+                          <div className="flex flex-col gap-6">
+                             <h3 className="text-[11px] font-bold uppercase tracking-[0.2em] text-gray-400 border-b border-gray-100 pb-4 mt-6">Items Requiring Manual Review</h3>
+                             {result.categories.manual.verificationRequired?.map((v: any, i: number) => (
+                                <div key={v.id} className="border border-gray-200 rounded-xl p-6 shadow-sm">
+                                   <div className="flex justify-between items-start mb-4">
+                                      <div className="flex flex-col gap-2">
+                                         <h3 className="font-semibold text-sm">{v.help}</h3>
+                                         <div className="flex flex-wrap gap-1">
+                                            {v.disabilities?.map((d: string) => (
+                                               <span key={d} className="px-1.5 py-0.5 rounded-md bg-gray-100 text-gray-600 border border-gray-200 text-[9px] font-semibold uppercase tracking-wider">
+                                                  {d}
+                                               </span>
+                                            ))}
+                                         </div>
+                                      </div>
+                                      <span className="text-[10px] font-mono font-medium text-gray-400 uppercase tracking-tight">{v.wcagCriteria}</span>
+                                   </div>
+                                   <p className="text-gray-500 text-sm mb-6 leading-relaxed">{v.description}</p>
+                                   <div className="bg-gray-50 p-4 rounded-lg border border-gray-100">
+                                      <h4 className="text-[10px] font-semibold uppercase tracking-widest text-gray-400 mb-3">Verification Target</h4>
+                                      {v.nodes.map((node: any, idx: number) => (
+                                         <div key={idx} className="mb-2 last:mb-0">
+                                            <code className="text-[11px] text-gray-600">{node.html}</code>
+                                         </div>
+                                      ))}
+                                   </div>
+                                </div>
+                             ))}
+                          </div>
+                       )}
                     </div>
                  </div>
               )}
